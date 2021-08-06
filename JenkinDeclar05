@@ -1,0 +1,59 @@
+pipeline{
+ agent any
+ triggers{
+     pollSCM('* * * * *')
+    // pipelineTriggers([githubPush()])
+    // pipelineTriggers([cron('* * * * *')])
+ }
+ options{timestamps()
+     buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5'))
+ }
+ tools{
+ maven "Maven3.8.1"
+ }
+ stages{
+	stage('Checkoutcode'){
+	steps{
+	  git branch: 'development', credentialsId: '31d6c1cb-076b-4548-9120-c2a22a214929', url: 'https://github.com/surendra1453/maven-web-application.git'
+	}
+	}
+	stage('Build'){
+	steps{
+	sh"mvn clean package"
+	}
+	}
+	stage('ExecuteSonarReport'){
+	steps{
+	sh "mvn clean sonar:sonar"    
+	}    
+	}
+	stage('UploadArtifactstoNexus'){
+	steps{
+	sh "mvn clean deploy"    
+	}    
+	}
+	stage('DeployApptoTomcat'){
+	 steps{
+      sshagent(['f63ac12b-c2d7-420d-9872-91d309be3db2']) {
+       sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@3.85.125.15:/opt/apache-tomcat-9.0.46/webapps/"
+    }  
+	}    
+	}
+ }//stages closing
+  post{
+  success{
+   emailext body: '''Build is Over -Success !!
+   So please check & Verify.
+
+   Regards,
+   Surendra Thawkar.''', subject: 'Build is over - Success !', to: 'samthaw2019@gmail.com'
+ }
+  failure{
+   emailext body: '''Build is Over - Failure!!
+   So please check & Verify.
+
+   Regards,
+   Surendra Thawkar.''', subject: 'Build is over - Failure !', to: 'samthaw2019@gmail.com'
+ }
+ }
+}
