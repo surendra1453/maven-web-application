@@ -5,7 +5,7 @@ pipeline{
      pollSCM('* * * * *')
      pipelineTriggers([githubPush()])
      pipelineTriggers([cron('* * * * *')])
- }
+ }*/
  options{timestamps()
      buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5'))
  }
@@ -39,7 +39,7 @@ pipeline{
        sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@3.85.125.15:/opt/apache-tomcat-9.0.46/webapps/"
     }  
 	}    
-	}*/
+	}
  }//stages closing
   post{
   success{
