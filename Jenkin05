@@ -33,7 +33,7 @@ emailext body: '''Build is Over!!
 
 Regards,
 Mithun Technologies,
-9980923226''', subject: 'Build is over!!', to: 'devopstrainingblr@gmail.com'
+9980923226''', subject: 'Build is over!!', to: 'samthaw2019@gmail.com'
 
 }
 
