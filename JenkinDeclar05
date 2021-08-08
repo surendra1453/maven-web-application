@@ -5,10 +5,10 @@ pipeline{
      pollSCM('* * * * *')
      pipelineTriggers([githubPush()])
      pipelineTriggers([cron('* * * * *')])
- }*/
+ }
  options{timestamps()
      buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5'))
- }
+ }*/
  tools{
  maven "Maven3.8.1"
  }
